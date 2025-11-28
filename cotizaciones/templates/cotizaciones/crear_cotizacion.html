@@ -1,0 +1,85 @@
+{% extends "usuarios/dashboard_base.html" %}
+
+{% block title %}Nueva Cotización - Logística SV{% endblock %}
+{% block page_title %}Nueva Cotización{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="crm-card">
+            <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
+                <div class="bg-primary text-white p-3 rounded-circle me-3">
+                    <i class="fas fa-calculator fa-lg"></i>
+                </div>
+                <div>
+                    <h5 class="fw-bold m-0">Calculadora de Envíos</h5>
+                    <p class="text-muted m-0 small">Completa los detalles para obtener un estimado inmediato.</p>
+                </div>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- Sección 1: Datos Generales -->
+                <h6 class="text-primary fw-bold text-uppercase mb-3"><i class="fas fa-info-circle me-2"></i>Datos
+                    Generales</h6>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Tipo de Servicio</label>
+                        {{ cotizacion_form.tipo_servicio }}
+                    </div>
+                </div>
+
+                <!-- Sección 2: Detalles del Paquete -->
+                <h6 class="text-primary fw-bold text-uppercase mb-3"><i class="fas fa-box me-2"></i>Detalles del Paquete
+                </h6>
+
+                {{ formset.management_form }}
+
+                {% for form in formset %}
+                <div class="card bg-light border-0 mb-3">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Descripción del Contenido</label>
+                                {{ form.descripcion }}
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Peso (lb)</label>
+                                {{ form.peso_lb }}
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Largo (cm)</label>
+                                {{ form.largo_cm }}
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Ancho (cm)</label>
+                                {{ form.ancho_cm }}
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Alto (cm)</label>
+                                {{ form.alto_cm }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-success">Valor Declarado (USD)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    {{ form.valor_declarado_usd }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="d-flex justify-content-end gap-3 mt-4 pt-3 border-top">
+                    <a href="{% url 'perfil' %}" class="btn btn-light">Cancelar</a>
+                    <button type="submit" class="btn btn-primary px-4 fw-bold">
+                        <i class="fas fa-paper-plane me-2"></i> Generar Cotización
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

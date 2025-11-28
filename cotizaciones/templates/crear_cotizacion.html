@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Cotización</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f4f4; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); }
+        h2 { text-align: center; color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; margin-bottom: 10px;}
+        h3 { color: #007bff; margin-top: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        input[type="text"], input[type="number"], select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; margin-bottom: 15px; }
+        .form-group { margin-bottom: 20px; }
+        .formset-row { border: 1px solid #ccc; padding: 15px; border-radius: 4px; margin-bottom: 10px; background-color: #fafafa; }
+        .row { display: flex; flex-wrap: wrap; gap: 10px; }
+        .col-md-3, .col-md-6, .col-md-12 { flex: 1 1 100%; }
+        .col-md-6 { flex: 1 1 calc(50% - 5px); }
+        .col-md-3 { flex: 1 1 calc(25% - 7.5px); }
+        .formset-heading { background-color: #007bff; color: white; padding: 10px; border-radius: 4px 4px 0 0; margin: -15px -15px 15px -15px; text-align: center;}
+        button[type="submit"] { width: 100%; padding: 15px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 18px; margin-top: 20px; }
+        .errorlist { color: red; list-style: none; padding: 0; margin-top: -15px; margin-bottom: 10px; font-weight: bold;}
+        .delete-checkbox-label { font-weight: normal; color: #dc3545; display: inline-block; margin-left: 10px;}
+        .message { padding: 10px; margin-bottom: 15px; border-radius: 4px; text-align: center; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .back-link { text-align: center; margin-bottom: 25px; }
+        .back-link a { text-decoration: none; color: #007bff; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Nueva Cotización de Logística</h2>
+        <div class="back-link">
+            <a href="{% url 'perfil' %}">
+                &larr; Volver al Perfil (Menú Principal)
+            </a>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message success">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <h3>1. Tipo de Servicio</h3>
+            <div class="form-group">
+                {{ cotizacion_form.tipo_servicio }}
+            </div>
+
+            <h3>2. Detalles de los Paquetes (Envíos)</h3>
+
+            {{ formset.management_form }}
+            
+            <div id="formset-container">
+                {% for form in formset %}
+                <div class="formset-row" data-form-index="{{ forloop.counter0 }}">
+                    <div class="formset-heading">Paquete #{{ forloop.counter }}</div>
+                    
+                    {% if form.non_field_errors %}<ul class="errorlist">{{ form.non_field_errors }}</ul>{% endif %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="{{ form.descripcion.id_for_label }}">Descripción:</label>
+                            {{ form.descripcion }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3"><label for="{{ form.peso_lb.id_for_label }}">Peso (lb):</label>{{ form.peso_lb }}</div>
+                        <div class="col-md-3"><label for="{{ form.largo_cm.id_for_label }}">Largo (cm):</label>{{ form.largo_cm }}</div>
+                        <div class="col-md-3"><label for="{{ form.ancho_cm.id_for_label }}">Ancho (cm):</label>{{ form.ancho_cm }}</div>
+                        <div class="col-md-3"><label for="{{ form.alto_cm.id_for_label }}">Alto (cm):</label>{{ form.alto_cm }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6"><label for="{{ form.valor_declarado_usd.id_for_label }}">Valor (USD):</label>{{ form.valor_declarado_usd }}</div>
+                        <div class="col-md-6" style="display: flex; align-items: flex-end; justify-content: flex-end;">
+                            {% if formset.can_delete %}{{ form.DELETE }} <label class="delete-checkbox-label" for="{{ form.DELETE.id_for_label }}">Eliminar</label>{% endif %}
+                            {{ form.id }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <button type="button" id="add-item-btn" style="background-color: #6c757d;">
+                + Añadir Paquete
+            </button>
+            <button type="submit">Generar Cotización</button>
+        </form>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const formsetContainer = document.getElementById('formset-container');
+            const addButton = document.getElementById('add-item-btn');
+            const totalForms = document.querySelector('#id_{{ formset.prefix }}-TOTAL_FORMS');
+            const prefix = '{{ formset.prefix }}';
+
+            // 1. Tomar el primer formulario (Paquete #1) como plantilla
+            const template = document.querySelector('.formset-row[data-form-index="0"]');
+            
+            // Si no hay plantilla (porque el formset está vacío), salimos
+            if (!template) return;
+
+            // 2. Clonar la plantilla para futuros formularios
+            const emptyForm = template.cloneNode(true);
+            
+            // 3. Limpiar la plantilla clonada
+            emptyForm.querySelectorAll('input, select').forEach(input => {
+                if (input.type !== 'hidden') input.value = '';
+                if (input.type === 'checkbox') input.checked = false;
+            });
+
+            // --- FUNCIÓN DE AYUDA PARA ACTUALIZAR ÍNDICES ---
+            const updateElementIndex = (el, index, prefix) => {
+                const idRegex = new RegExp(`(${prefix}-\\d+)`);
+                const replacement = `${prefix}-${index}`;
+                if (el.id) el.id = el.id.replace(idRegex, replacement);
+                if (el.name) el.name = el.name.replace(idRegex, replacement);
+                if (el.htmlFor) el.htmlFor = el.htmlFor.replace(idRegex, replacement);
+            };
+
+            // --- EVENTO DE CLIC ---
+            addButton.addEventListener('click', function() {
+                // 1. Obtenemos el índice actual (cuántos formularios hay)
+                const newFormIndex = parseInt(totalForms.value);
+                
+                // 2. Creamos el nuevo formulario desde la plantilla limpia
+                const newForm = emptyForm.cloneNode(true);
+                
+                // 3. Actualizamos todos los IDs y Names
+                newForm.setAttribute('data-form-index', newFormIndex);
+                newForm.querySelectorAll('*').forEach(element => {
+                    updateElementIndex(element, newFormIndex, prefix);
+                });
+
+                // 4. CORRECCIÓN: Actualizamos el título a "Paquete #[Índice + 1]"
+                newForm.querySelector('.formset-heading').textContent = `Paquete #${newFormIndex + 1}`;
+                
+                // 5. Añadimos el formulario al contenedor
+                formsetContainer.appendChild(newForm);
+                
+                // 6. Incrementamos el contador TOTAL_FORMS
+                totalForms.value = newFormIndex + 1;
+            });
+        });
+    </script>
+</body>
+</html>

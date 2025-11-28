@@ -1,0 +1,68 @@
+{% extends "usuarios/dashboard_base.html" %}
+
+{% block title %}Mis Cotizaciones - Logística SV{% endblock %}
+{% block page_title %}Historial de Cotizaciones{% endblock %}
+
+{% block content %}
+<div class="crm-card">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Usuario</th>
+                    <th>Servicio</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th class="text-end">Costo Total</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cotizacion in cotizaciones %}
+                <tr>
+                    <td><span class="fw-bold">#{{ cotizacion.id }}</span></td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="bg-light rounded-circle p-1 me-2 text-secondary fw-bold"
+                                style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
+                                {{ cotizacion.usuario.username|make_list|first|upper }}
+                            </div>
+                            <small>{{ cotizacion.usuario.username }}</small>
+                        </div>
+                    </td>
+                    <td>
+                        {% if cotizacion.tipo_servicio == 'IMP' %}
+                        <span class="badge bg-info bg-opacity-10 text-info">Importación</span>
+                        {% else %}
+                        <span class="badge bg-success bg-opacity-10 text-success">Exportación</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-muted small">{{ cotizacion.fecha_creacion|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        {% if cotizacion.estado == 'PEND' %}
+                        <span class="badge bg-warning text-dark">Pendiente</span>
+                        {% elif cotizacion.estado == 'PROC' %}
+                        <span class="badge bg-primary">En Proceso</span>
+                        {% else %}
+                        <span class="badge bg-success">Completada</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end fw-bold">${{ cotizacion.costo_total_usd|floatformat:2 }}</td>
+                    <td class="text-center">
+                        <a href="{% url 'detalle_cotizacion' cotizacion.id %}" class="btn btn-sm btn-outline-primary"
+                            title="Ver Detalle">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-4 text-muted">No se encontraron cotizaciones.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content %}

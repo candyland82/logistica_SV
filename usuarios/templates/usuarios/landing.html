@@ -1,0 +1,411 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logística SV - Soluciones de Importación y Exportación</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <style>
+        :root {
+            --primary-blue: #0d2c54;
+            --secondary-gray: #f4f6f9;
+            --accent-orange: #ff6b00;
+            --highlight-yellow: #ffc107;
+            --text-dark: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: var(--primary-blue);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: white !important;
+            font-size: 1.5rem;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--highlight-yellow) !important;
+        }
+
+        .btn-register-nav {
+            background-color: var(--accent-orange);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 5px 20px;
+            transition: all 0.3s;
+        }
+
+        .btn-register-nav:hover {
+            background-color: #e65100;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(13, 44, 84, 0.95) 0%, rgba(10, 35, 66, 0.9) 100%), url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 80px 0;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Shapes for background animation */
+        .shape {
+            position: absolute;
+            filter: blur(50px);
+            z-index: 0;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .shape-1 {
+            top: 10%;
+            left: 10%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 107, 0, 0.2);
+            border-radius: 50%;
+        }
+
+        .shape-2 {
+            bottom: 20%;
+            right: 10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 193, 7, 0.1);
+            border-radius: 50%;
+            animation-delay: -3s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .hero-content {
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            color: #e0e0e0;
+            font-weight: 300;
+        }
+
+        /* Login Card */
+        .login-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-card h3 {
+            color: white;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+
+        .form-control:focus {
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.3);
+        }
+
+        .btn-login-submit {
+            background-color: var(--accent-orange);
+            color: white;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .btn-login-submit:hover {
+            background-color: #e65100;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(230, 81, 0, 0.4);
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        .forgot-password a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        /* Services */
+        .services-section {
+            padding: 100px 0;
+            background-color: white;
+        }
+
+        .service-card {
+            border: none;
+            transition: all 0.4s;
+            height: 100%;
+            background-color: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-bottom: 4px solid transparent;
+        }
+
+        .service-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-bottom: 4px solid var(--accent-orange);
+        }
+
+        .service-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            background-color: rgba(13, 44, 84, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            transition: all 0.4s;
+        }
+
+        .service-card:hover .service-icon-wrapper {
+            background-color: var(--primary-blue);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            color: var(--primary-blue);
+            transition: all 0.4s;
+        }
+
+        .service-card:hover .service-icon {
+            color: var(--highlight-yellow);
+        }
+
+        /* Footer */
+        footer {
+            background-color: #0a2342;
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            margin-bottom: 10px;
+            display: block;
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover {
+            color: var(--highlight-yellow);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top animate__animated animate__fadeInDown">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-box-open text-warning me-2"></i>Logística SV
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon bg-light rounded"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="#servicios">Servicios</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#nosotros">Nosotros</a></li>
+                    <li class="nav-item ms-3">
+                        <a href="{% url 'registro' %}" class="btn btn-register-nav">Registrarse</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+
+        <div class="container">
+            <div class="row align-items-center">
+                <!-- Left Column: Text -->
+                <div class="col-lg-7 hero-content animate__animated animate__fadeInLeft">
+                    <span class="badge bg-warning text-dark mb-3 px-3 py-2 rounded-pill fw-bold">LÍDERES EN
+                        LOGÍSTICA</span>
+                    <h1 class="hero-title">Tu Carga, <br> <span style="color: var(--highlight-yellow);">Nuestra
+                            Prioridad</span></h1>
+                    <p class="hero-subtitle">Gestionamos tus importaciones y exportaciones con tecnología de punta y un
+                        equipo experto. Rápido, seguro y sin complicaciones.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#servicios" class="btn btn-outline-light rounded-pill px-4 py-2">Conocer Más</a>
+                    </div>
+                </div>
+
+                <!-- Right Column: Login Form -->
+                <div class="col-lg-4 offset-lg-1 animate__animated animate__fadeInRight animate__delay-1s">
+                    <div class="login-card">
+                        <h3><i class="fas fa-user-circle me-2"></i>Bienvenido</h3>
+                        <form method="post" action="{% url 'login' %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <input type="text" name="username" class="form-control" placeholder="Usuario" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="password" name="password" class="form-control" placeholder="Contraseña"
+                                    required>
+                            </div>
+                            <button type="submit" class="btn btn-login-submit">INGRESAR</button>
+                        </form>
+                        <div class="forgot-password">
+                            <a href="#">¿Olvidaste tu contraseña?</a>
+                            <br>
+                            <span class="text-white-50 small">¿No tienes cuenta?</span> <a href="{% url 'registro' %}"
+                                class="text-warning fw-bold">Regístrate aquí</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="servicios" class="services-section">
+        <div class="container">
+            <div class="text-center mb-5 animate__animated animate__fadeInUp">
+                <h6 class="text-uppercase text-warning fw-bold">Nuestros Servicios</h6>
+                <h2 class="fw-bold" style="color: var(--primary-blue);">Soluciones Integrales</h2>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4 animate__animated animate__fadeInUp animate__delay-1s">
+                    <div class="service-card text-center">
+                        <div class="service-icon-wrapper">
+                            <i class="fas fa-plane-departure service-icon"></i>
+                        </div>
+                        <h4>Aéreo Express</h4>
+                        <p class="text-muted">Envíos urgentes con prioridad de embarque y entrega en tiempo récord.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 animate__animated animate__fadeInUp animate__delay-2s">
+                    <div class="service-card text-center">
+                        <div class="service-icon-wrapper">
+                            <i class="fas fa-ship service-icon"></i>
+                        </div>
+                        <h4>Carga Marítima</h4>
+                        <p class="text-muted">Consolidación de carga (LCL) y contenedores completos (FCL) al mejor
+                            costo.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 animate__animated animate__fadeInUp animate__delay-3s">
+                    <div class="service-card text-center">
+                        <div class="service-icon-wrapper">
+                            <i class="fas fa-warehouse service-icon"></i>
+                        </div>
+                        <h4>Almacenaje</h4>
+                        <p class="text-muted">Bodegas seguras y control de inventario en tiempo real para tu mercancía.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-warning mb-3">Logística SV</h5>
+                    <p class="text-white-50">Tu socio estratégico en comercio internacional. Conectamos negocios,
+                        movemos el mundo.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-white mb-3">Enlaces Rápidos</h5>
+                    <a href="#" class="footer-link">Inicio</a>
+                    <a href="#servicios" class="footer-link">Servicios</a>
+                    <a href="{% url 'registro' %}" class="footer-link">Registrarse</a>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-white mb-3">Contacto</h5>
+                    <p class="text-white-50"><i class="fas fa-map-marker-alt me-2"></i> San Salvador, El Salvador</p>
+                    <p class="text-white-50"><i class="fas fa-envelope me-2"></i> contacto@logisticasv.com</p>
+                </div>
+            </div>
+            <hr class="border-secondary my-4">
+            <div class="text-center text-white-50">
+                <small>&copy; 2025 Logística SV. Todos los derechos reservados.</small>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

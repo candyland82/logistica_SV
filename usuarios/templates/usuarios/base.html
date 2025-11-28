@@ -1,0 +1,267 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Logística SV{% endblock %}</title>
+
+    <!-- CSS Dependencies -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <style>
+        :root {
+            --primary-blue: #0d2c54;
+            --secondary-gray: #f4f6f9;
+            --accent-orange: #ff6b00;
+            --highlight-yellow: #ffc107;
+            --text-dark: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-dark);
+            background-color: var(--secondary-gray);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: var(--primary-blue);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: white !important;
+            font-size: 1.5rem;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--highlight-yellow) !important;
+        }
+
+        .btn-register-nav {
+            background-color: var(--accent-orange);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 5px 20px;
+            transition: all 0.3s;
+        }
+
+        .btn-register-nav:hover {
+            background-color: #e65100;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            background-color: #0a2342;
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: auto;
+            /* Push footer to bottom */
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.6);
+            background: linear-gradient(135deg, rgba(13, 44, 84, 0.95) 0%, rgba(10, 35, 66, 0.9) 100%), url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .auth-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-orange));
+        }
+
+        .brand-logo {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-blue);
+        }
+
+        .brand-logo i {
+            font-size: 3rem;
+            color: var(--accent-orange);
+        }
+
+        .auth-title {
+            text-align: center;
+            color: var(--primary-blue);
+            font-weight: 800;
+            margin-bottom: 30px;
+        }
+
+        .btn-primary-custom {
+            background-color: var(--primary-blue);
+            color: white;
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: bold;
+            border: none;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .btn-primary-custom:hover {
+            background-color: var(--accent-orange);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 0, 0.3);
+        }
+
+        /* Form Controls */
+        .form-control {
+            border-radius: 10px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            background-color: #f8f9fa;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.1);
+            background-color: white;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        .helptext {
+            display: block;
+            font-size: 0.8rem;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        ul.errorlist {
+            list-style: none;
+            padding: 0;
+            color: #dc3545;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'landing' %}">
+                <i class="fas fa-box-open text-warning me-2"></i>Logística SV
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon bg-light rounded"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'landing' %}#servicios">Servicios</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'landing' %}#nosotros">Nosotros</a></li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'perfil' %}">Mi Perfil</a></li>
+                    <li class="nav-item ms-3">
+                        <form action="{% url 'logout' %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-light btn-sm rounded-pill px-3">Salir</button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li class="nav-item ms-3">
+                        <a href="{% url 'login' %}"
+                            class="btn btn-outline-light btn-sm rounded-pill px-3 me-2">Ingresar</a>
+                        <a href="{% url 'registro' %}" class="btn btn-register-nav">Registrarse</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-warning mb-3">Logística SV</h5>
+                    <p class="text-white-50">Tu socio estratégico en comercio internacional.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-white mb-3">Enlaces</h5>
+                    <a href="{% url 'landing' %}" class="footer-link">Inicio</a>
+                    <a href="{% url 'landing' %}#servicios" class="footer-link">Servicios</a>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-white mb-3">Contacto</h5>
+                    <p class="text-white-50"><i class="fas fa-envelope me-2"></i> contacto@logisticasv.com</p>
+                </div>
+            </div>
+            <hr class="border-secondary my-4">
+            <div class="text-center text-white-50">
+                <small>&copy; 2025 Logística SV. Todos los derechos reservados.</small>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Auto-style Django forms
+        document.addEventListener('DOMContentLoaded', function () {
+            var inputs = document.querySelectorAll('input, select, textarea');
+            inputs.forEach(function (input) {
+                if (input.type !== 'checkbox' && input.type !== 'radio' && input.type !== 'submit' && input.type !== 'hidden') {
+                    input.classList.add('form-control');
+                } else if (input.type === 'checkbox' || input.type === 'radio') {
+                    input.classList.add('form-check-input');
+                }
+            });
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

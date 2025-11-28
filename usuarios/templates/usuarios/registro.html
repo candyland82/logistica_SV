@@ -1,0 +1,59 @@
+{% extends "usuarios/base.html" %}
+
+{% block title %}Registro - Logística SV{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="container animate__animated animate__fadeInUp">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="auth-card">
+                    <div class="brand-logo">
+                        <i class="fas fa-box-open"></i>
+                        <h4 class="mt-2 fw-bold">Logística SV</h4>
+                    </div>
+
+                    <h2 class="auth-title">Crear Cuenta</h2>
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        {% for field in form %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.help_text %}
+                            <small class="helptext">{{ field.help_text }}</small>
+                            {% endif %}
+                            {% for error in field.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
+
+                        <button type="submit" class="btn btn-primary-custom">
+                            REGISTRARSE <i class="fas fa-user-plus ms-2"></i>
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <span class="text-muted">¿Ya tienes una cuenta?</span>
+                        <a href="{% url 'pre_login' %}" class="fw-bold text-primary text-decoration-none">Inicia Sesión
+                            aquí</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

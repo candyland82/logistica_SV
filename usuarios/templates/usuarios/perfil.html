@@ -1,0 +1,162 @@
+{% extends "usuarios/dashboard_base.html" %}
+
+{% block title %}Dashboard - Logística SV{% endblock %}
+{% block page_title %}Dashboard General{% endblock %}
+
+{% block content %}
+<!-- Stats Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="crm-card border-start border-4 border-primary">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="text-muted text-uppercase mb-1">Total Cotizaciones</h6>
+                    <h3 class="fw-bold text-primary mb-0">{{ total_cotizaciones }}</h3>
+                </div>
+                <div class="bg-primary bg-opacity-10 p-3 rounded-circle text-primary">
+                    <i class="fas fa-file-invoice fa-lg"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="crm-card border-start border-4 border-warning">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="text-muted text-uppercase mb-1">Pendientes</h6>
+                    <h3 class="fw-bold text-warning mb-0">{{ pendientes }}</h3>
+                </div>
+                <div class="bg-warning bg-opacity-10 p-3 rounded-circle text-warning">
+                    <i class="fas fa-clock fa-lg"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="crm-card border-start border-4 border-success">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="text-muted text-uppercase mb-1">Completadas</h6>
+                    <h3 class="fw-bold text-success mb-0">{{ completadas }}</h3>
+                </div>
+                <div class="bg-success bg-opacity-10 p-3 rounded-circle text-success">
+                    <i class="fas fa-check-circle fa-lg"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="crm-card border-start border-4 border-info">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="text-muted text-uppercase mb-1">Gasto Total</h6>
+                    <h3 class="fw-bold text-info mb-0">${{ gasto_total|floatformat:2 }}</h3>
+                </div>
+                <div class="bg-info bg-opacity-10 p-3 rounded-circle text-info">
+                    <i class="fas fa-dollar-sign fa-lg"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity & Quick Actions -->
+<div class="row g-4">
+    <!-- Recent Activity Table -->
+    <div class="col-lg-8">
+        <div class="crm-card">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="fw-bold m-0">Actividad Reciente</h5>
+                <a href="{% url 'lista_cotizaciones' %}" class="btn btn-sm btn-outline-primary">Ver Todo</a>
+            </div>
+
+            {% if mis_cotizaciones %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Servicio</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th class="text-end">Costo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cotizacion in mis_cotizaciones %}
+                        <tr>
+                            <td><span class="fw-bold">#{{ cotizacion.id }}</span></td>
+                            <td>
+                                {% if cotizacion.tipo_servicio == 'IMP' %}
+                                <span class="badge bg-info bg-opacity-10 text-info"><i
+                                        class="fas fa-plane-arrival me-1"></i> Importación</span>
+                                {% else %}
+                                <span class="badge bg-success bg-opacity-10 text-success"><i
+                                        class="fas fa-plane-departure me-1"></i> Exportación</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-muted small">{{ cotizacion.fecha_creacion|date:"d M, Y" }}</td>
+                            <td>
+                                {% if cotizacion.estado == 'PEND' %}
+                                <span class="badge bg-warning text-dark">Pendiente</span>
+                                {% elif cotizacion.estado == 'PROC' %}
+                                <span class="badge bg-primary">En Proceso</span>
+                                {% else %}
+                                <span class="badge bg-success">Completada</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end fw-bold">${{ cotizacion.costo_total_usd|default:"0.00"|floatformat:2 }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <img src="https://cdn-icons-png.flaticon.com/512/4076/4076432.png" alt="Empty" width="80"
+                    class="mb-3 opacity-50">
+                <p class="text-muted">No tienes cotizaciones recientes.</p>
+                <a href="{% url 'crear_cotizacion' %}" class="btn btn-primary">Crear Primera Cotización</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="col-lg-4">
+        <div class="crm-card bg-primary text-white mb-4"
+            style="background: linear-gradient(135deg, #0d2c54 0%, #1a4b8c 100%);">
+            <h5 class="fw-bold mb-3">¿Necesitas enviar algo?</h5>
+            <p class="mb-4 opacity-75">Cotiza tu envío en segundos y obtén las mejores tarifas del mercado.</p>
+            <a href="{% url 'crear_cotizacion' %}" class="btn btn-warning w-100 fw-bold">
+                <i class="fas fa-plus-circle me-2"></i> Nueva Cotización
+            </a>
+        </div>
+
+        <div class="crm-card">
+            <h5 class="fw-bold mb-3">Soporte Rápido</h5>
+            <div class="list-group list-group-flush">
+                <a href="#"
+                    class="list-group-item list-group-item-action d-flex align-items-center p-3 border-0 rounded mb-2 bg-light">
+                    <div class="bg-white p-2 rounded-circle me-3 shadow-sm text-primary"><i class="fas fa-question"></i>
+                    </div>
+                    <div>
+                        <h6 class="m-0 fw-bold">Preguntas Frecuentes</h6>
+                        <small class="text-muted">Resolver dudas comunes</small>
+                    </div>
+                </a>
+                <a href="#"
+                    class="list-group-item list-group-item-action d-flex align-items-center p-3 border-0 rounded bg-light">
+                    <div class="bg-white p-2 rounded-circle me-3 shadow-sm text-success"><i class="fab fa-whatsapp"></i>
+                    </div>
+                    <div>
+                        <h6 class="m-0 fw-bold">Chat con Soporte</h6>
+                        <small class="text-muted">Habla con un agente</small>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
