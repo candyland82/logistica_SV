@@ -133,21 +133,13 @@ AUTH_USER_MODEL = 'usuarios.Usuario'
 
 # Configuración de Correo Electrónico
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp-mail.outlook.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp-mail.outlook.com')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
-NOTIFICACION_EMAIL_CONFIG = {
-    'EMAIL_HOST': EMAIL_HOST, 
-    'EMAIL_PORT': EMAIL_PORT,
-    'EMAIL_USE_TLS': EMAIL_USE_TLS,
-    'EMAIL_HOST_USER': EMAIL_HOST_USER, 
-    'EMAIL_HOST_PASSWORD': EMAIL_HOST_PASSWORD, 
-}
+DEFAULT_FROM_EMAIL = f"Logistica SV <{EMAIL_HOST_USER}>"
 
 # Configuración para que Django sepa a dónde redirigir después de un LOGIN exitoso
 LOGIN_REDIRECT_URL = '/auth/perfil/'
